@@ -1,0 +1,90 @@
+<launch>
+	<env name="ROSCONSOLE_FORMAT" value="[${severity}][${node}]: ${message}"/>
+
+	<arg name="name" default="b4a" doc="Name of arm"/>
+	<arg name="en_chassis" default="false" doc="Enable chassis"/>
+
+
+	<include
+		file="$(find common_teleop)/launch/_common_teleop.launch"
+		pass_all_args="true"
+	/>
+	
+	
+	<arg 
+		name="rp1_name"
+		value="$(eval arg('name').replace('_serial', '') )"
+	/>
+	<arg 
+		name="rp1"
+		value="$(find common_teleop)/routines/$(arg rp1_name)"
+	/>
+	<arg 
+		if="$(arg en_chassis)"
+		name="rp2"
+		value="$(arg rp1):$(find common_teleop)/routines/wc"
+	/>
+	<arg 
+		unless="$(arg en_chassis)"
+		name="rp2"
+		value="$(arg rp1)"
+	/>
+
+	<node
+		name="routines_teleop"
+		pkg="common_teleop"
+		type="routines_teleop.py"
+		clear_params="true"
+		output="screen"
+		respawn="true"
+	>
+		<param
+			name="routines_path"
+			type="string"
+			value="$(arg rp2)"
+		/>
+		<!-- Input topics -->
+		<remap from="joy" to="/joy" />
+		<!-- Output topics -->
+		<remap from="run_routine" to="/common/run_routine"/>
+	</node>
+
+	<node
+		name="routines_server"
+		pkg="common_teleop"
+		type="routines_server.py"
+		clear_params="true"
+		output="screen"
+		respawn="true"
+	>
+		<!-- Input topics -->
+		<remap from="run_routine" to="/common/run_routine" />
+	</node>
+	
+	
+	<node
+		name="snapshooter"
+		pkg="common_teleop"
+		type="snapshooter"
+		clear_params="true"
+		output="screen"
+		respawn="true"
+		if="false"
+	>
+	
+		<param
+			name="log_dir"
+			type="string"
+			value="$(find common_teleop)/snapshoot_logs/"
+		/>
+	
+		<!-- Input topics -->
+		<remap from="snapshoot" to="/common/event_merged"/>
+		
+		<remap from="joint" to="/joint_states"/>
+		<remap from="pose" to="/tf_publish/beam00_base__to__beam3_hand_ee"/>
+		<remap from="joy" to="/servo_server/delta_twist_cmds"/>
+	</node>
+	
+	
+</launch>

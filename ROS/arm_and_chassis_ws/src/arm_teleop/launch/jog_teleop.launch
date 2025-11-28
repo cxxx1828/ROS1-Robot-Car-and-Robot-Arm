@@ -1,0 +1,52 @@
+<launch>
+	<env name="ROSCONSOLE_FORMAT" value="[${severity}][${node}]: ${message}"/>
+
+	<arg name="name" default="b4a" doc="Name of arm"/>
+
+	<group if="$(eval arg('name') == 'b4a')">
+		<node
+			name="jog_teleop"
+			pkg="arm_teleop"
+			type="jog_eff_teleop.py"
+			clear_params="true"
+			output="screen"
+			respawn="true"
+		>
+			<!-- Input topics -->
+			<remap from="joy" to="joy" />
+			<!-- Output topics -->
+			<remap from="jog_eff_cmd" to="/$(arg name)/jog_eff_ctrl/command" />
+			<remap from="calib" to="/$(arg name)/calib" />
+		</node>
+	</group>
+	<group if="$(eval arg('name') == 's3a')">
+		<node
+			name="jog_teleop"
+			pkg="arm_teleop"
+			type="jog_pos_teleop.py"
+			clear_params="true"
+			output="screen"
+			respawn="true"
+		>
+			<!-- Input topics -->
+			<remap from="joy" to="joy" />
+			<remap from="joints_fb" to="/joint_states" />
+			<!-- Output topics -->
+			<remap from="jog_pos_cmd" to="/$(arg name)/jog_pos_ctrl/command" />
+			<remap from="motors_freewheel" to="/$(arg name)/motors_freewheel" />
+		</node>
+
+		<node
+			if="false"
+			name="rqt_gui"
+			pkg="rqt_gui"
+			type="rqt_gui"
+			args="--perspective-file $(find arm_teleop)/config/rqt/joint0_cmd_square_fun.perspective"
+			clear_params="true"
+			output="screen"
+			respawn="true"
+		>
+		</node>
+	</group>
+
+</launch>

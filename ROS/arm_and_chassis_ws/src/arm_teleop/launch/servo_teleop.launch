@@ -1,0 +1,67 @@
+<launch>
+	<env
+		name="ROSCONSOLE_FORMAT"
+		value="[${severity}][${thread}][${node}/${function}:${line}]: ${message}"
+	/>
+	
+	<arg name="name" default="b4a" doc="Name of arm"/>
+	
+	<include
+		file="$(find arm_teleop)/launch/jog_teleop.launch"
+		pass_all_args="true"
+	/>
+	
+	
+	<!-- Override that from $(arg name)_moveit_config -->
+	<group ns="robot_description_planning">
+		<rosparam
+			command="load"
+			file="$(find arm_teleop)/config/joint_limits_for_servoing.yaml"
+		/>
+	</group>
+	
+	<!-- This node does the servoing calculations -->
+	<node
+		name="servo_server"
+		pkg="moveit_servo"
+		type="servo_server"
+		output="screen"
+	>
+		<rosparam
+			command="load"
+			file="$(find arm_teleop)/config/servo_server_config.yaml"
+		/>
+		<remap
+			from="/servo_server/out_cmd"
+			to="/$(arg name)/servo_pos_ctrl/command"
+		/>
+	</node>
+	<!-- <remap from="/servo_server/out_cmd" to="/$(arg name)/traj_pos_ctrl/arm/command" /> -->
+	
+	<!-- <node
+		name="servo_server"
+		pkg="arm_teleop"
+		type="pose_tracking_example"
+		output="screen"
+	>
+		<rosparam command="load" file="$(find arm_teleop)/config/s3a_servo_server_config.yaml" />
+			<rosparam command="load" file="$(find arm_teleop)/config/pose_tracking_settings.yaml" />
+	</node> -->
+	
+	<!-- teleop_tools translates a joystick command into a twist message -->
+	<arg
+		name="teleop_config"
+		default="$(find arm_teleop)/config/joypad_teleop_config.yaml"
+	/>
+	<rosparam file="$(arg teleop_config)" command="load" />
+	<node
+		name="joy_teleop"
+		pkg="joy_teleop"
+		type="joy_teleop.py"
+	>
+		<!-- Input topics -->
+		<remap from="joy" to="/joy" />
+		<!-- Output topics: /servo_server/delta_twist_cmds -->
+	</node>
+
+</launch>

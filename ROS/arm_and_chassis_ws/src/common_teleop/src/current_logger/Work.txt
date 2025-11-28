@@ -1,0 +1,10 @@
+-Dodali smo ADC za Arduino u FW folderu
+-Dodali smo novu temu za plotjuggler current_logger/current
+-Napravili smo kod koji ucitava vrednosti sa ADC i salje ih na zadatu temu
+-U kodu se nalazi i funkcija koja koristi tajmer. Nismo je iskoristili jer ima isti effekat kao i normalo da plotujemo
+-Ima malo gitera u plotovanju jer ovaj sistem nije RTOS
+-Koristi drugi arduino na tty/USB1 portu za ADC snimanje
+
+Radili:
+Andrej Gobor RA148/2020
+Sara Djordjev RA165/2020

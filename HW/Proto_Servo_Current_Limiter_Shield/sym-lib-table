@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name "Proto_Servo_Current_Limiter_Shield-cache")(type "Legacy")(uri "${KIPRJMOD}/Proto_Servo_Current_Limiter_Shield-cache.lib")(options "")(descr ""))
+  (lib (name "Extra_Common")(type "KiCad")(uri "${KIPRJMOD}/../../../Common/HW/Extra_Common.kicad_sym")(options "")(descr ""))
+)

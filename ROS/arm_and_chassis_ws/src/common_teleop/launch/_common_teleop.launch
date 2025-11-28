@@ -1,0 +1,93 @@
+<launch>
+	<env name="ROSCONSOLE_FORMAT" value="[${severity}][${node}]: ${message}"/>
+
+
+	<!-- Joystick Device Argument -->
+	<arg name="joy_dev" default="/dev/input/js0"/>
+
+	<node
+		name="joy_drv"
+		pkg="joy"
+		type="joy_node"
+		clear_params="true"
+		output="screen"
+		respawn="true"
+	>
+		<param name="joy_dev" value="$(arg joy_dev)"/>
+		<param name="deadzone" value="0.12"/>
+		<param name="autorepeat_rate" value="25"/>
+		<!-- Output topics -->
+		<remap from="joy" to="/raw_joy"/>
+	</node>
+
+	<node
+		name="joy_remapper"
+		pkg="common_teleop"
+		type="joy_remapper.py"
+		output="screen"
+		respawn="true"
+	>
+		<param name="joy_dev" value="$(arg joy_dev)"/>
+		<remap from="joy_src" to="/raw_joy" />
+		<remap from="joy_dst" to="/joy" />
+	</node>
+	<node
+		if="false"
+		name="set_log_level__joy_remapper"
+		pkg="rosservice"
+		type="rosservice"
+		args="call /joy_remapper/set_logger_level \'{logger: rospy, level: debug}\'"
+	/>
+
+
+	<node
+		name="mode_teleop"
+		pkg="common_teleop"
+		type="mode_teleop.py"
+		clear_params="true"
+		output="screen"
+		respawn="true"
+	>
+		<param name="en_chassis" type="bool" value="$(arg en_chassis)"/>
+		<!-- Input topics -->
+		<remap from="joy" to="/joy" />
+		<!-- Output topics -->
+		<remap from="arm/motors_en" to="/$(arg name)/motors_en" />
+		<remap from="chassis/motors_en" to="/wc/motors_en" />
+	</node>
+
+
+	<node
+		name="tf_publish"
+		pkg="common_teleop"
+		type="tf_publish"
+		output="screen"
+		args="beam00_base beam3_hand_ee 25"
+	/>
+
+	<!--node
+		name="current_logger"
+		pkg="common_teleop"
+		type="current_logger"
+		output="screen"
+		if="false"
+	/-->
+
+	<node
+		name="eventer_teleop"
+		pkg="common_teleop"
+		type="eventer_teleop.py"
+		clear_params="true"
+		output="screen"
+		respawn="true"
+	>
+		<!-- Input topics -->
+		<remap from="joy" to="/joy" />
+		<!-- Output topics -->
+		<remap from="event_re" to="/common/event_re"/>
+		<remap from="event_hold" to="/common/event_hold"/>
+		<remap from="event_merged" to="/common/event_merged"/>
+	</node>
+
+
+</launch>

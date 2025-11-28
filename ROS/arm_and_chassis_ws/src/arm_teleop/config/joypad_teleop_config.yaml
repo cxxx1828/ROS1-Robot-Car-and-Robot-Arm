@@ -1,0 +1,28 @@
+teleop:
+  cartesian_twist_command:
+    type: topic
+    message_type: geometry_msgs/TwistStamped
+    topic_name: /servo_server/delta_twist_cmds
+    axis_mappings:
+      - # L stick D- U+
+        axis: 1
+        target: twist.linear.x
+        scale: 1
+        offset: 0
+      - # L stick R- L+
+        axis: 0
+        target: twist.linear.y
+        scale: 1
+        offset: 0
+      - # R stick D- U+
+        axis: 4 # Old joypad
+        #axis: 3 # New joypad TODO Bug
+        target: twist.linear.z
+        scale: 1
+        offset: 0
+      - # R stick R- L+
+        axis: 3 # Old joypad
+        #axis: 2 # New joypad TODO Bug
+        target: twist.angular.y
+        scale: 1
+        offset: 0

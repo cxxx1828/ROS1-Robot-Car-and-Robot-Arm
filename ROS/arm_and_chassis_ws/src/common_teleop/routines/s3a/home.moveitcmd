@@ -1,0 +1,3 @@
+%include _common.moveitcmd
+use arm
+go home

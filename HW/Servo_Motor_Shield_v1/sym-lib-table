@@ -1,0 +1,4 @@
+(sym_lib_table
+  (lib (name "Servo_Motor_Shield_v1-cache")(type "Legacy")(uri "${KIPRJMOD}/Servo_Motor_Shield_v1-cache.lib")(options "")(descr ""))
+  (lib (name "Extra_Common")(type "KiCad")(uri "${KIPRJMOD}/../../../Common/HW/Extra_Common.kicad_sym")(options "")(descr ""))
+)
