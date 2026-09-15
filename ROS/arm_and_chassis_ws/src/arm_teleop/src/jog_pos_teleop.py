@@ -72,7 +72,7 @@ class JogPosTeleop(JogTeleop):
 				p = self.pos_min[id]
 			self.pos_cmd[id] = p
 		else:
-			# When no input, set to fb
+			# When no input, set to fb, and add
 			#FIXME Do not set to pos_fb until velocity come to 0.
 			#self.pos_cmd[0:self.n_joints] = self.pos_fb[0:self.n_joints]
 			pass
