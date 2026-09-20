@@ -1,11 +1,11 @@
 
-#include <stdint.h> // uint16_t and family
-#include <stdbool.h> // bool
-#include <stdio.h> // printf and family
-#include <string.h> // strerror()
-#include <unistd.h> // file ops
-#include <fcntl.h> // open() flags
-#include <sys/ioctl.h> // ioctl()
+#include <stdint.h> 
+#include <stdbool.h> 
+#include <stdio.h> 
+#include <string.h> 
+#include <unistd.h> 
+#include <fcntl.h> 
+#include <sys/ioctl.h> 
 
 #include "motor_ctrl.h"
 
@@ -33,7 +33,6 @@ int parse_args(
 	int n;
 	if(argc == 2){
 		if(c_str_eq(argv[1], "-h") || c_str_eq(argv[1], "--help")){
-			// Print help.
 			usage(stdout);
 			return 0;
 		}else{
@@ -44,7 +43,6 @@ int parse_args(
 			}
 		}
 	}else{
-		// Error.
 		fprintf(stderr, "ERROR: Wrong number of arguments!\n");
 		usage(stderr);
 		return 1;
