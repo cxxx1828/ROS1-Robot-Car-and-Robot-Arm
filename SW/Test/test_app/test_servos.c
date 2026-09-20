@@ -1,10 +1,10 @@
 
-#include <stdint.h> // uint16_t and family
-#include <stdio.h> // printf and family
-#include <unistd.h> // file ops
-#include <fcntl.h> // open() flags
-#include <string.h> // strerror()
-#include <errno.h> // errno
+#include <stdint.h> 
+#include <stdio.h> 
+#include <unistd.h> 
+#include <fcntl.h> 
+#include <string.h> 
+#include <errno.h> 
 
 #include "motor_ctrl.h"
 
